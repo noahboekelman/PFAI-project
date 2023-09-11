@@ -57,11 +57,11 @@ class SearchAlgorithm:
             curr_node = frontier.get()
             curr_node.state.deb()
             if curr_node.goal_state():
+                print("Solution Found")
                 stop = True    
                 return curr_node    
 
-
-            if (curr_node.state.state_val() in visited and curr_node.depth >= 1): #BFS: depth when visited doesn't matter, will always be the shortest.
+            if (curr_node.state.state_val() in visited): #BFS: depth when visited doesn't matter, will always be the shortest.
                 print(visited)
                 continue
 

@@ -14,9 +14,6 @@ def main():
     mc = MissionariesAndCannibals(init_state, goal_state)
 
     
-    
-
-    
     sa = SearchAlgorithm(mc)
     print('BFS')
     print('Start state: ')

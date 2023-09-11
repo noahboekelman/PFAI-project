@@ -78,7 +78,7 @@ class MissionariesAndCannibals:
                 self.state=[left_bank,boat,right_bank]
                 return True
         else:
-            if (left_bank[0]-1 == 0 or left_bank[0]-1 >= left_bank[1]) and (left_bank[0] >= 1 and left_bank[1] >= 1) and (right_bank[0]+1 >= right_bank[1]+1):
+            if (left_bank[0]-1 == 0 or left_bank[0]-1 >= left_bank[1] - 1) and (left_bank[0] >= 1 and left_bank[1] >= 1) and (right_bank[0]+1 >= right_bank[1]+1):
                 left_bank[0]-=1
                 left_bank[1]-=1
                 boat='r'
