@@ -5,6 +5,7 @@ Author: Tony Lindgren
 '''
 
 import queue
+from time import process_time
 
 class Node:
     '''
@@ -35,8 +36,10 @@ class Node:
     def pretty_print_solution(self, verbose=False):
         if self.action == None:
             return
-        print(f"action: {self.action}")
         self.parent.pretty_print_solution(verbose)
+        print(f"action: {self.action}")
+        if verbose:
+            self.state.pretty_print()
         
              
 class SearchAlgorithm:
@@ -44,30 +47,46 @@ class SearchAlgorithm:
     Class for search algorithms, call it with a defined problem 
     '''
     def __init__(self, problem):
-        self.start = Node(problem)        
+        self.start = Node(problem)      
+        self.cost=0  
         
-    def bfs(self):
+    def bfs(self, verbose=False, statistics=False):
         frontier = queue.Queue()
         frontier.put(self.start)
         stop = False
         visited = set()
+        if statistics: t1 = process_time()
+
+        #Start exploration
         while not stop:
             if frontier.empty():
                 return None
             curr_node = frontier.get()
-            curr_node.state.deb()
+            self.cost+=1
+
+            #Solution found
             if curr_node.goal_state():
-                print("Solution Found")
-                stop = True    
-                return curr_node    
-
-            if (curr_node.state.state_val() in visited): #BFS: depth when visited doesn't matter, will always be the shortest.
-                print(visited)
+                stop = True
                 continue
-
+                  
+            #Elimination of explored nodes
+            if (curr_node.state.state_val() in visited): #BFS: depth when visited doesn't matter, will always be the shortest.
+                continue
             visited.add(curr_node.state.state_val())
 
+            #Generaion of successors
             successor = curr_node.successor() 
             while not successor.empty():
                 frontier.put(successor.get())
+
+        #Statistics
+        if statistics: 
+            t2 = process_time()   
+            print('----------------------------')
+            print(f"Elapsed time (s): {t2-t1}")
+            print(f"Solution found at depth: {curr_node.depth}")
+            print(f"Number of nodes explored: {self.cost}")
+            print(f"Estimated effective branching factor: {self.cost / curr_node.depth}")
+            print('----------------------------')
+        return curr_node  
                     

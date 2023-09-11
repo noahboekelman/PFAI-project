@@ -17,9 +17,9 @@ def main():
     sa = SearchAlgorithm(mc)
     print('BFS')
     print('Start state: ')
-    print(mc.pretty_print())
+    mc.pretty_print()
 
-    goal_node = sa.bfs()
+    goal_node = sa.bfs(statistics=True)
     print('goal state: ')
     goal_node.state.pretty_print()
 
