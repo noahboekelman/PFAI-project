@@ -5,6 +5,7 @@ Author: Tony Lindgren
 '''
 
 import queue
+from collections import deque
 from time import process_time
 
 class Node:
@@ -68,14 +69,65 @@ class SearchAlgorithm:
             if curr_node.goal_state():
                 stop = True
                 continue
+
+            #If verbose
+            if verbose: 
+                print("Exploring:")
+                curr_node.pretty_print()
                   
             #Elimination of explored nodes
             if (curr_node.state.state_val() in visited): #BFS: depth when visited doesn't matter, will always be the shortest.
+                if verbose: print("Node already explored, skipping successors...")
                 continue
             visited.add(curr_node.state.state_val())
 
-            #Generaion of successors
+            #Generation of successors
             successor = curr_node.successor() 
+            while not successor.empty():
+                frontier.put(successor.get())
+
+        #Statistics
+        if statistics: 
+            t2 = process_time()   
+            print('----------------------------')
+            print(f"Elapsed time (s): {t2-t1}")
+            print(f"Solution found at depth: {curr_node.depth}")
+            print(f"Number of nodes explored: {self.cost}")
+            print(f"Estimated effective branching factor: {self.cost / curr_node.depth}")
+            print('----------------------------')
+        return curr_node  
+                    
+
+    def dfs(self, verbose=False, statistics=False):
+        frontier = queue.LifoQueue()
+        frontier.put(self.start)
+        stop=False
+        visited=set()
+        if statistics: t1=process_time()
+
+        while not stop:
+            if frontier.empty():
+                return None
+            curr_node=frontier.get()
+            self.cost+=1
+
+            #Goal state check
+            if curr_node.goal_state():
+                stop=True
+                continue
+
+            #Boring verbose 
+            if verbose:
+                print("Exploring:")
+                curr_node.pretty_print()
+
+            #Already visited check
+            if (curr_node.state.state_val() in visited):
+                continue
+            visited.add(curr_node.state.state_val())
+            
+            #Successors generation
+            successor=curr_node.successor()
             while not successor.empty():
                 frontier.put(successor.get())
 
