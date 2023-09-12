@@ -16,10 +16,10 @@ def main():
     
     sa = SearchAlgorithm(mc)
     print('BFS')
-    bfs_gn = sa.bfs(statistics=True, verbose=True)
+    bfs_gn = sa.bfs(statistics=True, verbose=False)
 
     print('DFS')
-    dfs_gn = sa.dfs(statistics=True, verbose=True, max_depth=12)
+    dfs_gn = sa.dfs(statistics=True, verbose=False, max_depth=12)
 
     print('IDFS')
     idfs_gn = sa.idfs(statistics=True)

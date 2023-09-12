@@ -50,6 +50,16 @@ class SearchAlgorithm:
     def __init__(self, problem):
         self.start = Node(problem)      
         self.cost=0  
+        self.deepest=0
+    
+    def statistics(self, depth, t1, t2, found=True):
+            print('----------------------------')
+            print(f"Elapsed time (s): {t2-t1}")
+            if found: print(f"Solution found at depth: {depth}")
+            else: print(f"No solution found until depth: {depth}")
+            print(f"Number of nodes explored: {self.cost}")
+            print(f"Estimated effective branching factor: {self.cost / depth}")
+            print('----------------------------')
         
     def bfs(self, verbose=False, statistics=False, check_visited=True):
         frontier = queue.Queue() #Queue, so least recently opened node is explored first
@@ -64,14 +74,17 @@ class SearchAlgorithm:
         #Start exploration
         while not stop:
             if frontier.empty():
+                if statistics: self.statistics(self.deepest, t1, process_time(), found=False)
                 return None
             curr_node = frontier.get()
             self.cost+=1
+            if curr_node.depth>self.deepest: self.deepest=curr_node.depth
 
             #Solution found
             if curr_node.goal_state():
+                if statistics: self.statistics(curr_node.depth, t1, process_time(), found=True)
                 stop = True
-                continue
+                return curr_node
 
             #If verbose
             if verbose: 
@@ -89,17 +102,6 @@ class SearchAlgorithm:
             successor = curr_node.successor() 
             while not successor.empty():
                 frontier.put(successor.get())
-
-        #Statistics
-        if statistics: 
-            t2 = process_time()   
-            print('----------------------------')
-            print(f"Elapsed time (s): {t2-t1}")
-            print(f"Solution found at depth: {curr_node.depth}")
-            print(f"Number of nodes explored: {self.cost}")
-            print(f"Estimated effective branching factor: {self.cost / curr_node.depth}")
-            print('----------------------------')
-        return curr_node  
                     
 
     def dfs(self, verbose=False, statistics=False, max_depth=None, check_visited=True):
@@ -114,14 +116,17 @@ class SearchAlgorithm:
 
         while not stop:
             if frontier.empty():
+                if statistics: self.statistics(slef.deepest, t1, process_time(), found=False)
                 return None
             curr_node=frontier.get()
             self.cost+=1
+            if curr_node.depth>self.deepest: self.deepest=curr_node.depth
 
             #Goal state check
             if curr_node.goal_state():
+                if statistics: self.statistics(curr_node.depth, t1, process_time(), found=True)
                 stop=True
-                continue
+                return curr_node
 
             #Boring verbose 
             if verbose:
@@ -139,24 +144,17 @@ class SearchAlgorithm:
                 successor=curr_node.successor()
                 while not successor.empty():
                     frontier.put(successor.get())
-
-        #Statistics
-        if statistics: 
-            t2 = process_time()   
-            print('----------------------------')
-            print(f"Elapsed time (s): {t2-t1}")
-            print(f"Solution found at depth: {curr_node.depth}")
-            print(f"Number of nodes explored: {self.cost}")
-            print(f"Estimated effective branching factor: {self.cost / curr_node.depth}")
-            print('----------------------------')
-        return curr_node  
         
+
     def idfs(self, verbose=False, statistics=False, max_depth=None, check_visited=True):
         stop=True
         depLim=0
+        if statistics: t1=process_time()
         while not stop:
             depLim+=1
-            goal_state = self.dfs(verbose=verbose, statistics=statistics, max_depth=depLim, check_visited=check_visited)
+            goal_state = self.dfs(verbose=False, statistics=False, max_depth=depLim, check_visited=check_visited)
             if goal_state != None:
+                if statistics: self.statistics(goal_state.state.depth, t1, process_time(), found=True)
                 return goal_state
+        if statistics: self.statistics(self.deepest, t1, process_time(), found=False)
         return None
