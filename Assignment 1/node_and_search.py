@@ -76,7 +76,7 @@ class SearchAlgorithm:
             #If verbose
             if verbose: 
                 print(f"Exploring node from {curr_node.action}:")
-                curr_node.pretty_print()
+                curr_node.state.pretty_print()
                   
             #Elimination of explored nodes
             if check_visited:
@@ -109,7 +109,7 @@ class SearchAlgorithm:
         if check_visited: visited=set()
         if verbose:
             print("DFS exploration:\nStarting node:")
-            self.state.pretty_print()
+            self.start.state.pretty_print()
         if statistics: t1=process_time()
 
         while not stop:
@@ -126,7 +126,7 @@ class SearchAlgorithm:
             #Boring verbose 
             if verbose:
                 print(f"Exploring node from {curr_node.action}:")
-                curr_node.pretty_print()
+                curr_node.state.pretty_print()
 
             #Already visited check
             if check_visited:
@@ -152,5 +152,11 @@ class SearchAlgorithm:
         return curr_node  
         
     def idfs(self, verbose=False, statistics=False, max_depth=None, check_visited=True):
-        frontier=queue.LifoQueue()
+        stop=True
+        depLim=0
+        while not stop:
+            depLim+=1
+            goal_state = self.dfs(verbose=verbose, statistics=statistics, max_depth=depLim, check_visited=check_visited)
+            if goal_state != None:
+                return goal_state
         return None
