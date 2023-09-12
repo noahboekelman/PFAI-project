@@ -51,11 +51,14 @@ class SearchAlgorithm:
         self.start = Node(problem)      
         self.cost=0  
         
-    def bfs(self, verbose=False, statistics=False):
-        frontier = queue.Queue()
+    def bfs(self, verbose=False, statistics=False, check_visited=True):
+        frontier = queue.Queue() #Queue, so least recently opened node is explored first
         frontier.put(self.start)
         stop = False
-        visited = set()
+        if check_visited: visited = set()
+        if verbose:
+            print("BFS Exploration:\nStart node:")
+            self.start.state.pretty_print()
         if statistics: t1 = process_time()
 
         #Start exploration
@@ -72,14 +75,15 @@ class SearchAlgorithm:
 
             #If verbose
             if verbose: 
-                print("Exploring:")
+                print(f"Exploring node from {curr_node.action}:")
                 curr_node.pretty_print()
                   
             #Elimination of explored nodes
-            if (curr_node.state.state_val() in visited): #BFS: depth when visited doesn't matter, will always be the shortest.
-                if verbose: print("Node already explored, skipping successors...")
-                continue
-            visited.add(curr_node.state.state_val())
+            if check_visited:
+                if (curr_node.state.state_val() in visited): #BFS: depth when visited doesn't matter, will always be the shortest.
+                    if verbose: print("Node already explored, skipping successors...")
+                    continue
+                visited.add(curr_node.state.state_val())
 
             #Generation of successors
             successor = curr_node.successor() 
@@ -98,11 +102,14 @@ class SearchAlgorithm:
         return curr_node  
                     
 
-    def dfs(self, verbose=False, statistics=False):
-        frontier = queue.LifoQueue()
+    def dfs(self, verbose=False, statistics=False, max_depth=None, check_visited=True):
+        frontier = queue.LifoQueue() #LIFO, so first we visit the most recently opened nodes
         frontier.put(self.start)
         stop=False
-        visited=set()
+        if check_visited: visited=set()
+        if verbose:
+            print("DFS exploration:\nStarting node:")
+            self.state.pretty_print()
         if statistics: t1=process_time()
 
         while not stop:
@@ -118,18 +125,20 @@ class SearchAlgorithm:
 
             #Boring verbose 
             if verbose:
-                print("Exploring:")
+                print(f"Exploring node from {curr_node.action}:")
                 curr_node.pretty_print()
 
             #Already visited check
-            if (curr_node.state.state_val() in visited):
-                continue
-            visited.add(curr_node.state.state_val())
+            if check_visited:
+                if (curr_node.state.state_val() in visited):
+                    continue
+                visited.add(curr_node.state.state_val())
             
             #Successors generation
-            successor=curr_node.successor()
-            while not successor.empty():
-                frontier.put(successor.get())
+            if curr_node.depth < max_depth:
+                successor=curr_node.successor()
+                while not successor.empty():
+                    frontier.put(successor.get())
 
         #Statistics
         if statistics: 
@@ -141,4 +150,7 @@ class SearchAlgorithm:
             print(f"Estimated effective branching factor: {self.cost / curr_node.depth}")
             print('----------------------------')
         return curr_node  
-                    
+        
+    def idfs(self, verbose=False, statistics=False, max_depth=None, check_visited=True):
+        frontier=queue.LifoQueue()
+        return None

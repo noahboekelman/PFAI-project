@@ -16,20 +16,13 @@ def main():
     
     sa = SearchAlgorithm(mc)
     print('BFS')
-    '''print('Start state: ')
-    mc.pretty_print()'''
-
-    goal_node = sa.bfs(statistics=True)
-    '''print('goal state: ')
-    goal_node.state.pretty_print()'''
+    bfs_gn = sa.bfs(statistics=True)
 
     print('DFS')
-    '''print('Start state: ')
-    mc.pretty_print()'''
+    dfs_gn = sa.dfs(statistics=True, max_depth=12)
 
-    goal_node = sa.dfs(statistics=True)
-    '''print('goal state: ')
-    goal_node.state.pretty_print()'''
+    print('IDFS')
+    idfs_gn = sa.idfs(statistics=True)
 
 if __name__ == "__main__":
     main()
