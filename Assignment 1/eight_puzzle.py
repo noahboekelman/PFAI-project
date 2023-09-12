@@ -6,7 +6,7 @@ class EightPuzzle:
         self.state = initial_state
         self.goal = goal
         self.action = ["u","d","l","r"]
-        self.ePos(self.state.match("e"))
+        self.ePos = self.state.index(0)
 
     def state_val(self):
         return (f"{state[0]}{state[1]}{state[2]}{state[3]}{state[4]}{state[5]}{state[6]}{state[7]}{state[8]}")
@@ -60,11 +60,13 @@ class EightPuzzle:
         return False
 
     def pretty_print(self):
-        print('----------------------------')
+        print('/-----------------\\')
         print(f'|  {self.state[0]}  |  {self.state[1]}  |  {self.state[2]}  |')
+        print('+-----+-----+-----+')
         print(f'|  {self.state[3]}  |  {self.state[4]}  |  {self.state[5]}  |')
+        print('+-----+-----+-----+')
         print(f'|  {self.state[6]}  |  {self.state[7]}  |  {self.state[8]}  |')
-        print('----------------------------')
+        print('\\-----------------/')
     
     def deb(self):
         print(self.state_val())
@@ -77,4 +79,4 @@ class EightPuzzle:
     def h2(self):
         val=0
         for i in range(0,9):
-            return
+            return(abs(i%3 - self.state[i]%3) + abs(i/3 - self.state[i]/3))
