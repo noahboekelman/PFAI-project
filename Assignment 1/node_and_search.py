@@ -146,15 +146,17 @@ class SearchAlgorithm:
                     frontier.put(successor.get())
         
 
-    def idfs(self, verbose=False, statistics=False, max_depth=None, check_visited=True):
+    def ids(self, verbose=False, statistics=False, max_depth=None, check_visited=True):
         stop=True
         depLim=0
         if statistics: t1=process_time()
         while not stop:
             depLim+=1
             goal_state = self.dfs(verbose=False, statistics=False, max_depth=depLim, check_visited=check_visited)
+            self.cost+=goal_state.cost
             if goal_state != None:
                 if statistics: self.statistics(goal_state.state.depth, t1, process_time(), found=True)
                 return goal_state
+        
         if statistics: self.statistics(self.deepest, t1, process_time(), found=False)
         return None

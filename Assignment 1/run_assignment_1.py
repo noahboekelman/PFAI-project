@@ -19,10 +19,10 @@ def main():
     bfs_gn = sa.bfs(statistics=True, verbose=False)
 
     print('DFS')
-    dfs_gn = sa.dfs(statistics=True, verbose=False, max_depth=12)
+    dfs_gn = sa.dfs(statistics=True, verbose=False, max_depth=15, check_visited=True)
 
-    print('IDFS')
-    idfs_gn = sa.idfs(statistics=True)
+    print('IDS')
+    ids_gn = sa.ids(statistics=True, verbose=False, max_depth=None, check_visited=True)
 
 if __name__ == "__main__":
     main()
