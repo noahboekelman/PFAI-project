@@ -13,7 +13,6 @@ class FourInARow:
             new_board.append([start_string, start_string, start_string, start_string, start_string, start_string])
         self.board = new_board
         self.action = list(range(7))
-        print("Action: ", self.action)
         if chip != 'r' and chip != 'w':
             print('The provided value is not a valid chip (must be, r or w): ', chip)
         if player == 'human' and chip == 'w':
@@ -30,19 +29,40 @@ class FourInARow:
     # The action is to insert a new chip at the top of the board. This chip will be inserted at the column 1-7.
     # One constraint is that if the column is full, the chip cannot be inserted.
 
+    def action_handler(self, column):
+        if column[0] != "_":
+            print("Full column!")
+        else:
+            count = 0
+            for i in column:
+                le = len(column)
+                le2 = le-1
+                print("LE: ", le2)
+                if column[le2] == "_":
+                    column.pop()
+                    column.append(self.to_move())
+                    break
+                elif i != "_":
+                    replace_pos = count-1
+                    column[replace_pos] = (self.to_move())
+                    break
+                else:
+                    count += 1
+                    print("Count: ", count)
+        return column
+
     def result(self, action):           
         dc = deepcopy(self)
         if self.to_move() == 'w':
             dc.curr_move = 'r'
             column = dc.board[action]
-            if column[0] != "_":
-                print("Full column!")
-            else:
-                column.pop()
-                column.append(self.to_move())
+            new_column = self.action_handler(column)
+            dc.board[action] = new_column
         else:
             dc.curr_move = 'w'
-            dc.board[action].append(self.to_move())            
+            column = dc.board[action]
+            new_column = self.action_handler(column)
+            dc.board[action] = new_column          
         return dc
         
     #eval
@@ -104,6 +124,6 @@ class FourInARow:
         for i in pretty_board:
             print(i)
         
-        #print("Self.board: ")
-        #for i in self.board:
-        #    print(i)
+        print("Self.board: ")
+        for i in self.board:
+            print(i)
