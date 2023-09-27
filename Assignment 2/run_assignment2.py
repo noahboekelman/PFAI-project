@@ -11,19 +11,27 @@ def ask_ai(state0):
     #move = gs.minimax_search()
     #gs = GameSearch(state0, depth=3, time=20)
     #move = gs.mcts()
-    state1 = state0.result(move)
-    print('--------')
-    print('AI moves')
-    print('--------')
-    state1.pretty_print()  
-    stop, value = state1.is_terminal() 
-    if stop == True:
-        if value > 0:
-            print('AI won')                       
-        else:
-            print('Human won')
-        return state1, True
-    return state1, False
+    move = input("Mr AI, what column 0-6?")
+    try:
+        converted_move = int(move)
+        if converted_move > 6:
+            print("Enter a valid digit 0-6!")
+    except ValueError:
+        print("Enter a valid digit 0-6!")
+    else:
+        state1 = state0.result(converted_move)
+        print('--------')
+        print('AI moves')
+        print('--------')
+        state1.pretty_print()  
+        stop, value = state1.is_terminal() 
+        if stop == True:
+            if value > 0:
+                print('AI won')                       
+            else:
+                print('Human won')
+            return state1, True
+        return state1, False
 
 def ask_player(state0):
     move = input('Please choose column 0-6: ')

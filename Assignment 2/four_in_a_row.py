@@ -37,7 +37,6 @@ class FourInARow:
             for i in column:
                 le = len(column)
                 le2 = le-1
-                print("LE: ", le2)
                 if column[le2] == "_":
                     column.pop()
                     column.append(self.to_move())
@@ -48,7 +47,6 @@ class FourInARow:
                     break
                 else:
                     count += 1
-                    print("Count: ", count)
         return column
 
     def result(self, action):           
@@ -67,31 +65,108 @@ class FourInARow:
         
     #eval
     #TODO
-        
-    def is_terminal(self):
-        #check vertical
-        for c in range(0, len(self.board)):
-            count = 0
-            curr_chip = None
-            print("Currchip: ", self.curr_move)
-            for r in range(0, len(self.board[c])):
-                if curr_chip == self.board[c][r]:
-                    count = count + 1
+
+    # inputs one row and checks for four values in a row
+    def check_count(self, row, val):
+        count = row.count(val)
+        if count >= 4:
+            elem_count = 0
+            for i in range(0, len(row)):
+                if val == row[i]:
+                    elem_count += 1
+                    print("Elem count: ", elem_count)
                 else:
-                    curr_chip = self.board[c][r]     
-                    count = 1
-                if count == 4:
-                    if self.ai_player == curr_chip:    
-                        print('Found vertical win')
+                    val = row[i]
+                    elem_count = 1
+                    print("Elem count: ", elem_count)
+                if elem_count == 4:
+                    if self.ai_player == val:    
                         return True, 100          #MAX ai wins positive utility
                     else:
-                        print('Found vertical loss')
                         return True, -100         #MIN player wins negative utility
-                    
-        #check horizontal 
-        #TODO
+        else:
+            elem_count = 0  # Reset count if the sequence is broken
+        return False, 0
 
+    def is_terminal(self):
+        #check horizontal 
+
+        #creating new array of arrays with horizontal values in the same arrays
+        #works as intended
+        final_arr = []
+        for i in range(6):
+            arr = []
+            for column in self.board:
+                arr.append(column[i])
+                #print("Column: ", arr)
+            final_arr.append(arr)
+
+        # horizontal rows are created, final_arr is now list of lists with all rows and elements
+        # in the same arrays
+        for row in final_arr:
+            if "w" in row:
+                has_won, util = self.check_count(row, "w")
+                if has_won:
+                    if util > 0:
+                        print('Found horizontal win') #MAX ai wins positive utility
+                    else:
+                        print('Found horizontal loss') #MIN player wins negative utility
+                    return has_won, util
+
+            elif "r" in row:
+                has_won, util = self.check_count(row, "r")
+                if has_won:
+                    if util > 0:
+                        print('Found horizontal win') #MAX ai wins positive utility
+                    else:
+                        print('Found horizontal loss') #MIN player wins negative utility
+                    return has_won, util
+                        
+        
+        #check vertical
+        for column in self.board:
+            if "w" in column:
+                has_won, util = self.check_count(column, "w")
+                if has_won:
+                    if util > 0:
+                        print('Found vertical win') #MAX ai wins positive utility
+                    else:
+                        print('Found vertical loss') #MIN player wins negative utility
+                    return has_won, util
+            elif "r" in column:
+                has_won, util = self.check_count(column, "r")
+                if has_won:
+                    if util > 0:
+                        print('Found vertical win') #MAX ai wins positive utility
+                    else:
+                        print('Found vertical loss') #MIN player wins negative utility
+                    return has_won, util
                     
+        #check vertical
+        #for c in range(0, len(self.board)):
+        #    count = 0
+        #    curr_chip = None
+        #    print("Currchip: ", self.curr_move)
+        #    for r in range(0, len(self.board[c])):
+        #       if curr_chip == self.board[c][r]:
+        #            count = count + 1
+        #            print("A")
+        #            print("Currchip: ", self.curr_move)
+        #        else:
+        #            curr_chip = self.board[c][r]     
+        #            count = 1
+        #            print("B")
+        #            print("Currchip: ", self.curr_move)
+        #        if count == 4:
+        #            print("Count: ", count)
+        #            if self.ai_player == curr_chip:    
+        #                print('Found vertical win')
+        #                return True, 100          #MAX ai wins positive utility
+        #            else:
+        #                print('Found vertical loss')
+        #                return True, -100         #MIN player wins negative utility
+        
+
         #check positive diagonal
         for c in range(7-3): 
             for r in range(6-3):    
@@ -104,7 +179,8 @@ class FourInARow:
                         return True, -100
         
         #check negative diagonal 
-        #TODO   
+        #TODO
+        
              
         #check draw
         #TODO  
@@ -124,6 +200,6 @@ class FourInARow:
         for i in pretty_board:
             print(i)
         
-        print("Self.board: ")
-        for i in self.board:
-            print(i)
+        #print("Self.board: ")
+        #for i in self.board:
+        #    print(i)
