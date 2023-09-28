@@ -23,8 +23,15 @@ class FourInARow:
     def to_move(self):
         return self.curr_move
         
-    #actions
-    #TODO
+    #TESTME actions
+    def move(self, action):
+        if len(self.board[action]) == 6:
+            return False
+        else:
+            self.board[action].append(self.curr_move)
+            self.curr_move = 'r' if (self.curr_move == 'w') else 'w'
+            return True
+
 
     def result(self, action):                    
         dc = deepcopy(self)
@@ -36,8 +43,7 @@ class FourInARow:
             dc.board[action].append(self.to_move())            
         return dc
         
-    #eval
-    #TODO
+    #TODO eval
         
     def is_terminal(self):
         #check vertical
@@ -59,7 +65,27 @@ class FourInARow:
                         return True, -100         #MIN player wins negative utility
                     
         #check horizontal 
-        #TODO   
+        for r in range(0, 6):
+            count = 0
+            curr_chip = None
+            for c in range(0, 7):
+                if len(self.board[c]) <= r:
+                    curr_chip = None
+                    count = 0
+                    continue
+                if curr_chip == self.board[c][r]:
+                    count += 1
+                else:
+                    curr_chip = self.board[c][r]
+                    count = 1
+                if count >= 4:
+                    if self.ai_player == curr_chip:
+                        #print('Found horizontal win')
+                        return True, 100
+                    else:
+                        #print('Found horizontal loss')
+                        return True, -100
+
                     
         #check positive diagonal
         for c in range(7-3): 
@@ -76,7 +102,8 @@ class FourInARow:
         #TODO   
              
         #check draw
-        #TODO  
+        if sum([len(a) for a in self.board]) == 6*7:
+            return False;
          
         return False, 0                                            
                 
