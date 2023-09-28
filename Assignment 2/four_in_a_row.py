@@ -79,6 +79,7 @@ class FourInARow:
     # inputs one row and checks for four values in a row
     def check_count(self, row, val):
         count = row.count(val)
+        # print("Count:", count, " Val: ", val, " Type: ", row)
         if count >= 4:
             elem_count = 0
             for i in range(0, len(row)):
@@ -114,7 +115,6 @@ class FourInARow:
         # horizontal rows are created, final_arr is now list of lists with all rows and elements
         # in the same arrays
         for row in final_arr:
-            if "w" in row:
                 has_won, util = self.check_count(row, "w")
                 if has_won:
                     if util > 0:
@@ -125,7 +125,6 @@ class FourInARow:
                         )  # MIN player wins negative utility
                     response = (has_won, util)
 
-            elif "r" in row:
                 has_won, util = self.check_count(row, "r")
                 if has_won:
                     if util > 0:
