@@ -3,31 +3,73 @@ Define game and start execution of game search
 
 Author: Tony Lindgren
 '''
-from four_in_a_row_complete import FourInARow
-from game_node_and_game_search_complete import GameSearch
-
+from four_in_a_row import FourInARow
+#from game_node_and_game_search import GameSearch
     
 def ask_ai(state0):
-    gs = GameSearch(state0, depth=3)
-    move = gs.minimax_search()
+    #gs = GameSearch(state0, depth=3)
+    #move = gs.minimax_search()
     #gs = GameSearch(state0, depth=3, time=20)
     #move = gs.mcts()
-    state1 = state0.result(move)
-    print('--------')
-    print('AI moves')
-    print('--------')
-    state1.pretty_print()  
-    stop, value = state1.is_terminal() 
-    if stop == True:
-        if value > 0:
-            print('AI won')                       
-        else:
-            print('Human won')
-        return state1, True
-    return state1, False 
- 
+    move = input("Mr AI, what column 0-6? ")
+    try:
+        converted_move = int(move)
+    except ValueError:
+        converted_move = -1
+    while not converted_move <= 6 or not converted_move >= 0:
+        print("Please input a digit 0-6!")
+        move = input("Mr AI, what column 0-6? ")
+        try:
+            converted_move = int(move)
+        except ValueError:
+            converted_move = -1
+
+    else:
+        state1 = state0.result(converted_move)
+        print('--------')
+        print('AI moves')
+        print('--------')
+        state1.pretty_print()  
+        stop, value = state1.is_terminal() 
+        if stop == True:
+            if value > 0:
+                print('AI won')                       
+            else:
+                print('Human won')
+            return state1, True
+        return state1, False
+
+def ask_player(state0):
+    move = input("Mr Human, what column 0-6? ")
+    try:
+        converted_move = int(move)
+    except ValueError:
+        converted_move = -1
+    while not converted_move <= 6 or not converted_move >= 0:
+        print("Please input a digit 0-6!")
+        move = input("Mr Human, what column 0-6? ")
+        try:
+            converted_move = int(move)
+        except ValueError:
+            converted_move = -1
+
+    else:
+        state1 = state0.result(converted_move)
+        print('--------')
+        print('Player moves')
+        print('--------')
+        state1.pretty_print()
+        stop, value = state1.is_terminal()
+        if stop == True:
+            if value > 0:
+                print('AI won')                       
+            else:
+                print('Human won')
+            return state1, True
+        return state1, False
+
 def main():
-    print('Welcome to play for-in-a-row!')
+    print('Welcome to play four-in-a-row!')
     answer = None
     while answer != 'y' and answer != 'n':
         answer = input('Would you like to start [y/n]: ')        
