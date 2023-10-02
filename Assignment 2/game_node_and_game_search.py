@@ -39,31 +39,41 @@ class GameSearch:
         move = self.actions(tree)
         return move
     
-    def minimax_search(self): 
-        start_time = process_time()   
-        _, move = self.max_value(self.state, self.depth)  
+    def minimax_search(self, ab=False, timeLimit=None): 
+        self.start_time = process_time()
+        if (ab): 
+            self.alpha = -100000
+            self.beta = 100000
+        _, move = self.max_value(self.state, self.depth, ab)  
         return move
     
-    def max_value(self, state, depth):
+    def max_value(self, state, depth, ab=False, timeLimit=None):
         move = None
         terminal, value = state.is_terminal()
-        if terminal or depth == 0:
+        if terminal:
             return value, None
+        elif depth == 0 or (timeLimit != None and timeLimit < process_time() - self.start_time):
+            return state.evaluate(), None
         v = -100000
         actions = state.actions()
         for action in actions: 
             new_state = state.result(action)
             v2, _ = self.min_value(new_state, depth - 1)
-             if v2 > v:
+            if v2 > v:
                 v = v2
                 move = action
+                self.alpha = max(self.alpha, v)
+            if v >= self.beta:
+                return v, move
         return v, move
     
-    def min_value(self, state, depth):
+    def min_value(self, state, depth, ab=False, timeLimit=None):
         move = None
         terminal, value = state.is_terminal()
-        if terminal or depth == 0:
+        if terminal:
             return value, None  
+        elif depth ==0 or (timeLimit != None and timeLimit < process_time() - self.start_time):
+            return state.evaluate(), None
         v = 100000
         actions = state.actions()
         for action in actions: 
@@ -72,4 +82,7 @@ class GameSearch:
             if v2 < v:
                 v = v2
                 move = action
+                self.beta = min(self.beta, v)
+            if v <= self.alpha:
+                return v, move
         return v, move
