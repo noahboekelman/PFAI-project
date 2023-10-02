@@ -27,8 +27,10 @@ class FourInARow:
             print("The provided value is not a valid chip (must be, r or w): ", chip)
         if player == "human" and chip == "w":
             self.ai_player = "r"
+            self.human_player = "w"
         else:
             self.ai_player = "w"
+            self.human_player = "r"
         self.curr_move = chip
 
     def to_move(self):
@@ -191,18 +193,29 @@ class FourInARow:
         #                return True, -100         #MIN player wins negative utility
 
         # check positive diagonal
-        # for c in range(7-3):
-        #    for r in range(6-3):
-        #       if len(self.board[c]) > r and len(self.board[c+1]) > r+1 and len(self.board[c+2]) > r+2 and len(self.board[c+3]) > r+3:
-        #            if self.ai_player == self.board[c][r] and self.ai_player == self.board[c+1][r+1] and self.ai_player == self.board[c+2][r+2] and self.ai_player == self.board[c+3][r+3]:
-        #                print('Found positive diagonal win')
-        #                return True, 100
-        #            elif self.ai_player != self.board[c][r] and self.ai_player != self.board[c+1][r+1] and self.ai_player != self.board[c+2][r+2] and self.ai_player != self.board[c+3][r+3]:
-        #                print('Found positive diagonal loss')
-        #                return True, -100
+        for c in range(7-3): # * 4
+            for r in range(6-3): # * 4
+                if len(self.board[c]) > r and len(self.board[c+1]) > r+1 and len(self.board[c+2]) > r+2 and len(self.board[c+3]) > r+3:
+                    if self.ai_player == self.board[c][r] and self.ai_player == self.board[c+1][r+1] and self.ai_player == self.board[c+2][r+2] and self.ai_player == self.board[c+3][r+3]:
+                        print('Found positive diagonal win')
+                        return True, 100
+                    elif (self.human_player == self.board[c][r] and self.human_player == self.board[c+1][r+1]and self.human_player == self.board[c+2][r+2] and self.human_player == self.board[c+3][r+3]):
+                        print('Found positive diagonal loss')
+                        return True, -100
 
         # check negative diagonal
         # TODO
+        for c in range(3, 6): # * 4
+            for r in range(6-3): # * 4
+                if len(self.board[c]) > r and len(self.board[c-1]) > r+1 and len(self.board[c-2]) > r+2 and len(self.board[c-3]) > r+3:
+                    if self.ai_player == self.board[c][r] and self.ai_player == self.board[c-1][r+1] and self.ai_player == self.board[c-2][r+2] and self.ai_player == self.board[c-3][r+3]:
+                        print('Found negative diagonal win')
+                        return True, 100
+                    elif self.human_player == self.board[c][r] and self.human_player == self.board[c-1][r+1] and self.human_player == self.board[c-2][r+2] and self.human_player == self.board[c-3][r+3]:
+                        print('Found negative diagonal loss')
+                        return True, -100
+                    else:
+                        print(f"Nope: {self.board[c][r]}, {self.board[c-1][r+1]}, {self.board[c-2][r+2]}, {self.board[c-3][r+3]}")
 
         # check draw
         # TODO
@@ -219,8 +232,6 @@ class FourInARow:
         for i in pretty_board:
             print(i)
 
-        # print("Self.board: ")
-        # for i in self.board:
-        #    print(i)
-
-    
+        print("Self.board: ")
+        for i in self.board:
+            print(i)
