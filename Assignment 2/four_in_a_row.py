@@ -75,8 +75,7 @@ class FourInARow:
             dc.board[action] = new_column
         return dc
 
-    # eval
-    # TODO
+    # * Evaluation
 
     # inputs one row and checks for four values in a row
     def check_count(self, row, val):
@@ -91,8 +90,6 @@ class FourInARow:
                     val = row[i]
                     elem_count = 1
                 if elem_count == 4:
-                    print("Elem count plus: ", elem_count)
-                    print(val)
                     if self.ai_player == val:
                         return True, 100  # MAX ai wins positive utility
                     else:
@@ -201,11 +198,25 @@ class FourInARow:
                     elif self.human_player == self.board[c][r] and self.human_player == self.board[c-1][r+1] and self.human_player == self.board[c-2][r+2] and self.human_player == self.board[c-3][r+3]:
                         print('Found negative diagonal loss')
                         return True, -100
-                    else:
-                        print(f"Nope: {self.board[c][r]}, {self.board[c-1][r+1]}, {self.board[c-2][r+2]}, {self.board[c-3][r+3]}")
 
         # check draw
         # TODO
+        is_full = False
+        is_full_count = 0
+        for c in self.board:
+            for v in c:
+                v_count = 0
+                if v != "_":
+                    v_count + 1
+            if v_count == 6:
+                is_full_count + 1
+        if is_full_count == 7:
+            is_full = True
+        
+        response = is_full, 0
+
+
+
         return response
 
     # pretty_print
@@ -219,8 +230,4 @@ class FourInARow:
 
         print("Pretty Board:")
         for i in pretty_board:
-            print(i)
-
-        print("Self.board: ")
-        for i in self.board:
             print(i)

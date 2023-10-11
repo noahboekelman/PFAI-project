@@ -34,8 +34,10 @@ def ask_ai(state0):
         if stop == True:
             if value > 0:
                 print('AI won')                       
-            else:
+            elif value < 0:
                 print('Human won')
+            else:
+                print("Draw")
             return state1, True
         return state1, False
 
@@ -63,8 +65,10 @@ def ask_player(state0):
         if stop == True:
             if value > 0:
                 print('AI won')                       
-            else:
+            elif value < 0:
                 print('Human won')
+            else:
+                print("Draw")
             return state1, True
         return state1, False
 
