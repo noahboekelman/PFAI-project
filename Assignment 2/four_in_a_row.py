@@ -75,7 +75,21 @@ class FourInARow:
             dc.board[action] = new_column
         return dc
 
-    # * Evaluation
+    # eval
+    # TODO
+    def evaluate(self):
+        score = 0
+        chip = self.curr_move
+        for i in range(len(self.board)):
+            for j in range(6):
+                if self.board[i][j] == chip:
+                    score += 4 - abs(3 - i) #Score for column
+                    score += 3 - min(abs(3 - j), abs(2 - j))
+                elif self.board[i][j] != "_":
+                    score -= 4 - abs(3 - i) #Score for column
+                    score -= 3 - min(abs(3 - j), abs(2 - j))
+        return score
+
 
     # inputs one row and checks for four values in a row
     def check_count(self, row, val):
@@ -219,9 +233,7 @@ class FourInARow:
 
         return response
 
-    # pretty_print
-    # TODO
-    # creates a new pretty board to display columns
+    # pretty_print creates a new pretty board to display columns
     def pretty_print(self):
         pretty_board = [[], [], [], [], [], []]
         for i in self.board:
