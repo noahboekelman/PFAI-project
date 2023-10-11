@@ -1,0 +1,60 @@
+A:
+?- belongs_to(X, hufflepuff). 
+Answer:
+X = cedric_diggory.
+
+B:
+?- loyalty(cedric_diggory, X).
+Answer:
+X = hufflepuff.
+
+C:
+?- patronus(X, Y), boggart(X, failure).
+Answer:
+X = hermione_granger,
+Y = otter.
+
+D:
+?- findall(X,(loyalty(X, Y), loyalty(Y, X)), L).
+Answer:
+L = [harry_potter, hermione_granger].
+
+
+1.
+?- wand(X, Y), wand(Z, Y), X \= Z.
+Answer:
+X = harry_potter,
+Y = '15"_elder_thestral_hair',
+Z = draco_malfoy.
+
+2.
+?- influence(X, 'hermione_granger').
+Answer:
+X = harry_potter.
+
+3.
+?- influence(X, Y), belongs_to(X, Y).
+Answer:
+X = draco_malfoy,
+Y = slytherin.
+
+4.
+?- trans_influence(X, X).
+Answer:
+X = harry_potter.
+
+5.
+?- trans_influence(X, Y), \+ loyalty(Y, X), X \= Y.
+Answer:
+X = cedric_diggory,
+Y = harry_potter.
+
+6.
+?- trans_influence(X, Y), loyalty(Y, X), X \= Y.
+Answer:
+false.
+
+
+
+
+
