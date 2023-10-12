@@ -52,6 +52,16 @@ trans_influence(X, Y) :- influence(X, Z), influence(Z, Y).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Part 2: Define set and handle terms
+
+to_set([], []). % If input list is empty, the variable output will be empty.
+
+m_member(V, [V|_]). % Checks if the value is in the head
+m_member(V, [_|T]) :- m_member(V, T).
+
+% to_set([H|T], [H|Set]) :- m_member(H, )
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Define predicates to handle sets  
