@@ -89,6 +89,8 @@ list_union([H|T], L2, S) :-
         (m_member(H, T); m_member(H, L2)),
         list_union(T, L2, S).
 
+% Transform the input lists into sets, to enable for S2 to be added,
+% when doing list_union. Kind of a work around after some headaches.
 set_union(L1, L2, S3) :-
         to_set(L1, S1),
         to_set(L2, S2),
@@ -98,15 +100,62 @@ set_union(L1, L2, S3) :-
 
 % Intersection of L1 and L2 into S3
 
-a_intersection([H|T], L2, [H|Set]) :-
-        \+ m_member(H, T),
-        \+ m_member(H, Set),
-        m_member(H, L2),
-        a_intersection(T, L2, Set).
+list_intersection([], _, []). % Base case
+list_intersection(_, [], []). % Base case
 
-a_intersection([H|T], L2, Set) :-
-        (m_member(H, T); m_member(H, L2); m_member(H, Set)),
-        a_intersection(T, L2, Set).
+% Add H to St if H not a member of T and if H is in L2.
+list_intersection([H|T], L2, [H|St]) :-
+        \+ m_member(H, T),
+        m_member(H, L2),
+        list_intersection(T, L2, St).
+
+% If H is in T, recursive call with S, instead of SetTail.
+list_intersection([H|T], L2, S) :-
+        m_member(H, T),
+        list_intersection(T, L2, S).
+
+% If H not in T, but H not a member of L2, recursive call with S.
+list_intersection([H|T], L2, S) :-
+        \+ m_member(H, T),
+        \+ m_member(H, L2),
+        list_intersection(T, L2, S).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Difference between L1 - L2, defined as S3.
+
+list_difference([], _, []). % Base case
+
+% Add H to St if H not in T (maybe not needed when doing to_set),
+% and if H not in L2.
+list_difference([H|T], L2, [H|St]) :-
+        \+ m_member(H, T), % Last atom of list (no duplicates)
+        \+ m_member(H, L2),
+        list_difference(T, L2, St).
+
+% If H in T or if H in L2, recursive call is made with S,
+% instead of SetTail, with added H.
+list_difference([H|T], L2, S) :-
+        m_member(H, T); m_member(H, L2),
+        list_difference(T, L2, S).
+
+% Sets are made of L1 and L2, mainly to help with the call of L2 in,
+% list_difference, by removing duplicates.
+set_difference(L1, L2, S3) :-
+        to_set(L1, S1),
+        to_set(L2, S2),
+        list_difference(S1, S2, F3),
+        list_difference(S2, S1, F4),
+        set_union(F3, F4, S3).
+
+% Above code for set_difference feels like a workaround, but it works.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Check if a set L1 is a subset of set L2. If true, boolean = true.
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Part 3: Monkey and banana
