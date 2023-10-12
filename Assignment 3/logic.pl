@@ -152,9 +152,24 @@ set_difference(L1, L2, S3) :-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Check if a set L1 is a subset of set L2. If true, boolean = true.
+% Check if a set L1 is a subset of set L2. Returns boolean.
+% FYI: Checks if one instance of V in L1 is present in one instance,
+% of V in L2.
 
+check_subset([], _).
 
+check_subset([H|T], L2) :-
+        m_member(H, L2),
+        check_subset(T, L2).
+
+a_subset(L1, L2) :-
+        to_set(L1, S1),
+        to_set(L2, S2),
+        check_subset(S1, S2).
+
+% Query result:
+% ?- a_subset([b,b,f],[c,b,b,c,e,f]).
+% true
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
