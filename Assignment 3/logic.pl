@@ -53,12 +53,17 @@ trans_influence(X, Y) :- influence(X, Z), influence(Z, Y).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Part 2: Define set and handle terms
 
-to_set([], []). % If input list is empty, the variable output will be empty.
-
 m_member(V, [V|_]). % Checks if the value is in the head
 m_member(V, [_|T]) :- m_member(V, T).
 
-% to_set([H|T], [H|Set]) :- m_member(H, )
+
+to_set([], []). % If input list is empty, the variable output will be empty.
+to_set([H|T], [H|St]):-
+        \+ m_member(H, T),
+        to_set(T, St).
+to_set([H|T], S):-
+        m_member(H, T),
+        to_set(T, S).
 
 
 
