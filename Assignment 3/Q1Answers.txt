@@ -55,6 +55,11 @@ Answer:
 false.
 
 
+to_set([], []). % If input list is empty, the variable output will be of that empty list.
 
+m_member(V, [V|_]). % Checks if the value is in the head
+m_member(V, [_|T]) :- m_member(V, T). % Checks the tail and recursively checks the tail for any value V.
+
+to_set([H|T], [HSet|TSet]) :- m_member(H, HSet), to_set([_|T], [H|TSet]).
 
 

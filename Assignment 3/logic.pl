@@ -51,26 +51,62 @@ influence(hogwarts, draco_malfoy).
 trans_influence(X, Y) :- influence(X, Z), influence(Z, Y).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % Part 2: Define set and handle terms
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Transformation of list of atoms into set
 
 m_member(V, [V|_]). % Checks if the value is in the head
 m_member(V, [_|T]) :- m_member(V, T).
 
-
 to_set([], []). % If input list is empty, the variable output will be empty.
-to_set([H|T], [H|St]):-
+to_set([H|T], [H|St]) :-
         \+ m_member(H, T),
         to_set(T, St).
-to_set([H|T], S):-
+to_set([H|T], S) :-
         m_member(H, T),
         to_set(T, S).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Define predicates to handle sets
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Define predicates to handle sets  
+% Union of L1 and L2
 
+list_union([], L, L). % Base case
+
+% If H not in T and not in L2, add to SetTail. Recursive call with SetTail.
+list_union([H|T], L2, [H|St]) :- 
+        \+ m_member(H, T), \+ m_member(H, L2),
+        list_union(T, L2, St).
+
+% If H in T or H in L2, recursive call with Tail.
+list_union([H|T], L2, S) :-
+        (m_member(H, T); m_member(H, L2)),
+        list_union(T, L2, S).
+
+set_union(L1, L2, S3) :-
+        to_set(L1, S1),
+        to_set(L2, S2),
+        list_union(S1, S2, S3).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Intersection of L1 and L2 into S3
+
+a_intersection([H|T], L2, [H|Set]) :-
+        \+ m_member(H, T),
+        \+ m_member(H, Set),
+        m_member(H, L2),
+        a_intersection(T, L2, Set).
+
+a_intersection([H|T], L2, Set) :-
+        (m_member(H, T); m_member(H, L2); m_member(H, Set)),
+        a_intersection(T, L2, Set).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Part 3: Monkey and banana
