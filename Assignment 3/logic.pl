@@ -73,8 +73,6 @@ to_set([H|T], S) :-
 
 % Define predicates to handle sets
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % Union of L1 and L2
 
 list_union([], L, L). % Base case
@@ -141,7 +139,7 @@ list_difference([H|T], L2, S) :-
 
 % Sets are made of L1 and L2, mainly to help with the call of L2 in,
 % list_difference, by removing duplicates.
-set_difference(L1, L2, S3) :-
+list_diff(L1, L2, S3) :-
         to_set(L1, S1),
         to_set(L2, S2),
         list_difference(S1, S2, F3),
@@ -200,14 +198,21 @@ a_subset(L1, L2) :-
         % Define a predicate that becomes true if:  
         %       all members of Preconditions are part of current State (State) 
         % and return false otherwise
-    
+        
+        % Checks if Preconditions is a subset of State.
+        op_applicable(Preconditions, State) :- 
+                a_subset(Preconditions, State).
+
         % TODO 2:
         % Test to avoid using the operator multiple times 
         % (To avoid infinite loops, in more comlex problems this is often implemented via states)
         % predicate_name(Op, Sofar)
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Define a predicate that checks if Op has been done before
-        % if so the predicate should fail otherwise be true 
+        % if so the predicate should fail otherwise be true
+
+        check_sofar(Op, Sofar):-
+                m_member(Op, Sofar).
 
         % TODO 3: 
         % First half of applying an operator  
