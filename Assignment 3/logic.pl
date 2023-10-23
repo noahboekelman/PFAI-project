@@ -179,17 +179,17 @@ a_subset(L1, L2) :-
 % the 3rd is a temporary list of actions creating the plan, initially empty 
 % the 4th the plan that will be produced.
 
-% start(Plan):-   
-    % solve([on(monkey,floor),on(box,floor),at(monkey,a),at(box,b),
-           % at(bananas,c),at(stick,d),status(bananas,hanging)],
-           % [status(bananas,grabbed)], [], Plan).
+start(Plan):-   
+    solve([on(monkey,floor),on(box,floor),at(monkey,a),at(box,b),
+           at(bananas,c),at(stick,d),status(bananas,hanging)],
+           [status(bananas,grabbed)], [], Plan).
 
 % This predicate produces the plan. Once the Goal list is a subset 
 % of the current State the plan is complete and it is written to 
 % the screen using write_sol/1.
 
-% solve(State, Goal, Sofar, Plan):-
-        % op(Op, Preconditions, Delete, Add),
+solve(State, Goal, Sofar, Plan):-
+        op(Op, Preconditions, Delete, Add),
 
         % TODO 1:
         % Check if an operator can be utilized or not
@@ -200,6 +200,7 @@ a_subset(L1, L2) :-
         % and return false otherwise
         
         % Checks if Preconditions is a subset of State.
+        
         op_applicable(Preconditions, State) :- 
                 a_subset(Preconditions, State).
 
@@ -220,20 +221,34 @@ a_subset(L1, L2) :-
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         % Define a predicate that removes all members of the Delete list 
         % from the state and the results are returned in the Reminder 
-        
-        % append(Add, Remainder, NewState),
-        % Useful for debugging (de-comment to see output) 
-        % format('Operator:~w ~N', [Op]),    
-        % format('NewState:~w ~N', [NewState]),
-        % solve(NewState, Goal, [Op|Sofar], Plan).
 
-% solve(State, Goal, Plan, RPlan):-
+        delete_state_members(State, Delete, Remainder):-
+                list_difference(State, Delete, S),
+                Remainder = S,
+
+        append(Add, Remainder, NewState),
+        % Useful for debugging (de-comment to see output) 
+        format('Operator:~w ~N', [Op]),    
+        format('NewState:~w ~N', [NewState]),
+        solve(NewState, Goal, [Op|Sofar], Plan),
+
+solve(State, Goal, Plan, RPlan):-
         % TODO 4:
-        % add a check if State is a subset of Goal here 
-        % reverse(Plan,RPlan).
+        % add a check if State is a subset of Goal here
+        
+        state_equals_goal(State, Goal):-
+                a_subset(State, Goal),
 
 % TODO 5: 
 % reverse(Plan,RPlan) - define this predicate which returns a reversed list
+
+% Reversing a list based on List, Accumulator and Reversed List (empty)
+        rev_list([], Acc, Acc). % Base Case
+        rev_list([H|T], Acc, R):-
+                rev_list(T, [H|Acc], R).
+        
+reverse_list(Plan, RPlan):-
+        rev_list(Plan, [], RPlan).
 
         
 % The operators take 4 arguments
@@ -242,23 +257,31 @@ a_subset(L1, L2) :-
 % 3rd arg = delete list
 % 4th arg = add list.
 
-% op(swing(stick),
-%    [on(monkey,box), at(monkey,X), at(box,X), holding(monkey,stick), at(bananas,X), status(bananas,hanging)],
-%    [status(B,hanging)],
-%    [status(B,grabbed)]).
+op(swing(stick),
+        [on(monkey,box), at(monkey,X), at(box,X), holding(monkey,stick), at(bananas,X), status(bananas,hanging)],
+        [status(B,hanging)],
+        [status(B,grabbed)]).
 
-% op(grab(stick),
-%        [at(monkey,X), at(stick, X), on(monkey,floor)],
-%        [at(stick, X)],
-%        [holding(monkey,stick)]).
+op(grab(stick),
+        [at(monkey,X), at(stick, X), on(monkey,floor)],
+        [at(stick, X)],
+        [holding(monkey,stick)]).
 
 % TODO 6: 
-% op(climbon(box) - define this operator
+op(climbon(box),
+        [at(monkey,X), at(box,X), on(monkey,floor)],
+        [on(monkey,floor)],
+        [on(monkey,box)]).
+        % - define this operator
 % TODO 7:
-% op(push(box,X,Y) - define this operator
+op(push(box,X,Y),
+        [at(monkey,X), at(box,X), on(monkey,floor)],
+        [at(monkey,X), at(box,X)],
+        [at(monkey,Y), at(box,Y)]).
+        % - define this operator
 
-% op(go(X,Y),
-%        [at(monkey,X), on(monkey,floor)],
-%        [at(monkey,X)],
-%        [at(monkey,Y)]):- 
-%        X \== Y.
+op(go(X,Y),
+        [at(monkey,X), on(monkey,floor)],
+        [at(monkey,X)],
+        [at(monkey,Y)]):- 
+        X \== Y.
