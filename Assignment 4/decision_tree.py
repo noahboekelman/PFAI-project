@@ -4,6 +4,7 @@ decision_tree.py
 Author Korbinian Randl
 '''
 import random
+from math import log2
 
 class BinaryDecisionTree:
     def __init__(self, X:dict, y:list, bias:float=.5, max_depth:int=float('inf')) -> None:
@@ -169,5 +170,14 @@ class BinaryDecisionTree:
 
         returns:        information gain of the split.
         '''
-        #TODO: implement this method
-        return 0.
+        score = 0
+        p = sum(y_all)
+        n = len(y_all) - p
+
+        for E in y_split:
+            p_i = sum(E)
+            n_i = len(E) - p_i
+
+            score += (p_i + n_i)/(p + n) * ((p_i/(p_i+n_i)) * log2(p_i/(p_i+n_i)) + (n_i/(p_i+n_i))*log2(n_i/(p_i+n_i)))
+
+        return 1 - score
