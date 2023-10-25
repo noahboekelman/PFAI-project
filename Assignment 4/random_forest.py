@@ -47,5 +47,7 @@ class BinaryRandomForest:
             
         returns:        a bootstrap sample of X and y
         '''
-        #TODO change this
-        return X, y
+        indices = random.choices(range(len(X)), k=len(X))
+        X_ = [X[i] for i in indices]
+        y_ = [y[i] for i in indices]
+        return X_, y_
