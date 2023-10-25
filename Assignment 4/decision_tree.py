@@ -178,6 +178,11 @@ class BinaryDecisionTree:
             p_i = sum(E)
             n_i = len(E) - p_i
 
-            score += (p_i + n_i)/(p + n) * ((p_i/(p_i+n_i)) * log2(p_i/(p_i+n_i)) + (n_i/(p_i+n_i))*log2(n_i/(p_i+n_i)))
+            if p_i == 0:
+                continue
+            elif n_i == 0:
+                continue
+            else:
+                score += (p_i + n_i)/(p + n) * ((p_i/(p_i+n_i)) * log2(p_i/(p_i+n_i)) + (n_i/(p_i+n_i)) * log2(n_i/(p_i+n_i)))
 
         return 1 - score
