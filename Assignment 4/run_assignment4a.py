@@ -59,11 +59,16 @@ def print_data(X:dict, y:list, n:int=10, column_width:int=9) -> None:
 ####################################################################################################
 
 with open('wines.json', 'r') as file:
-    X_train = json.load(file)
-y_train = X_train.pop('class')
+    X = json.load(file)
+y = X.pop('class')
 
-X_test  = X_train
-y_test  = y_train
+threshold = int(len(y) * 0.85)
+
+X_train = {key: X[key][0:threshold] for key in X.keys()}
+y_train = y[0:threshold]
+
+X_test = {key: X[key][threshold:] for key in X.keys()}
+y_test = y[threshold:]
 
 ####################################################################################################
 # Main Function:                                                                                   #

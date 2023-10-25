@@ -1,0 +1,24 @@
+Q4: We get very unprecise predictions:
+
+'Performance Random Forest:
+      |    true    |
+ pred | TRUE FALSE |
+------|------------|
+ TRUE | 2969   882 |
+FALSE |  289   758 |
+
+Accuracy: 0.7609
+F1-score: 0.8353'
+
+Spliting the dataset into a training set and test set did not resolve the problem.
+
+'Performance Decision Tree:
+      |    true    |
+ pred | TRUE FALSE |
+------|------------|
+ TRUE |  556   127 |
+FALSE |  105   192 |
+
+Accuracy: 0.7633
+F1-score: 0.8274'
+
