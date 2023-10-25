@@ -15,8 +15,7 @@ def get_false_positives(y_true:list, y_pred:list) -> int:
 
     returns:         number of false positives.
     '''
-    #TODO change this:
-    return 0
+    return sum([(y_true[i] == False and y_pred[i] == True) for i in range(len(y_true))])
 
 def get_true_positives(y_true:list, y_pred:list) -> int:
     '''Returns the number of true positives.
@@ -29,8 +28,7 @@ def get_true_positives(y_true:list, y_pred:list) -> int:
 
     returns:         number of true positives.
     '''
-    #TODO change this:
-    return 0
+    return sum([(y_true[i] == True and y_pred[i] == True) for i in range(len(y_true))])
 
 def get_false_negatives(y_true:list, y_pred:list) -> int:
     '''Returns the number of false negatives.
@@ -43,8 +41,7 @@ def get_false_negatives(y_true:list, y_pred:list) -> int:
 
     returns:         number of false negatives.
     '''
-    #TODO change this:
-    return 0
+    return sum([(y_true[i] == True and y_pred[i] == False) for i in range(len(y_true))])
 
 def get_true_negatives(y_true:list, y_pred:list) -> int:
     '''Returns the number of true negatives.
@@ -57,8 +54,7 @@ def get_true_negatives(y_true:list, y_pred:list) -> int:
 
     returns:         number of true negatives.
     '''
-    #TODO change this:
-    return 0
+    return sum([(y_true[i] == False and y_pred[i] == False) for i in range(len(y_true))])
 
 def get_accuracy(y_true:list, y_pred:list) -> float:
     '''Returns the accuracy of the predictions.
@@ -71,8 +67,33 @@ def get_accuracy(y_true:list, y_pred:list) -> float:
 
     returns:         accuracy of the predictions.
     '''
-    #TODO change this (hint: use the above functions):
-    return 0.
+    return (get_true_positives(y_true, y_pred)+get_true_negatives(y_true, y_pred))/(get_true_positives(y_true, y_pred)+get_true_negatives(y_true, y_pred)+get_false_positives(y_true, y_pred)+get_false_negatives(y_true, y_pred))
+
+def get_precision(y_true:list, y_pred:list) -> float:
+    '''Returns the precision of the predictions.
+
+    inputs:
+        y_true:      list[bool] of true labels.
+
+        y_pred:      list[bool] of predicted labels.
+
+
+    returns:         precision of the predictions.
+    '''
+    return (get_true_positives(y_true, y_pred))/(get_true_positives(y_true, y_pred)+get_false_positives(y_true, y_pred))
+
+def get_recall(y_true:list, y_pred:list) -> float:
+    '''Returns the recall of the predictions.
+
+    inputs:
+        y_true:      list[bool] of true labels.
+
+        y_pred:      list[bool] of predicted labels.
+
+
+    returns:         recall of the predictions.
+    '''
+    return (get_true_positives(y_true, y_pred))/(get_true_positives(y_true, y_pred)+get_false_negatives(y_true, y_pred))
 
 def get_f1(y_true:list, y_pred:list) -> float:
     '''Returns the f1 score for the predictions.
@@ -85,8 +106,7 @@ def get_f1(y_true:list, y_pred:list) -> float:
 
     returns:         f1-score of the predictions.
     '''
-    #TODO change this (hint: use the above functions):
-    return 0.
+    return 2/((1/get_recall(y_true, y_pred))+(1/get_precision(y_true, y_pred)))
 
 def pretty_print(y_true:list, y_pred:list) -> None:
     '''Prints a confusion matrix in ascii art.
