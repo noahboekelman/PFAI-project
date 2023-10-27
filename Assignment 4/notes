@@ -1,6 +1,6 @@
 Q4: We get very unprecise predictions:
 
-'Performance Random Forest:
+Performance Random Forest:
       |    true    |
  pred | TRUE FALSE |
 ------|------------|
@@ -8,17 +8,47 @@ Q4: We get very unprecise predictions:
 FALSE |  289   758 |
 
 Accuracy: 0.7609
-F1-score: 0.8353'
+F1-score: 0.8353
 
-Spliting the dataset into a training set and test set did not resolve the problem.
+After exploring the code, we noticed that in the 'predict' method of the random forest, instead of picking the most predicted label, 
+it was picking one of the prediction randomly. After modifying this code for it to work properly and after spliting the training set 
+into a training and a test set in order to evaluate the model's generalisation capabilities correctly, the following score was achieved.
 
-'Performance Decision Tree:
+Performance Random Forest:
       |    true    |
  pred | TRUE FALSE |
 ------|------------|
- TRUE |  556   127 |
-FALSE |  105   192 |
+ TRUE |  390    93 |
+FALSE |  105   147 |
 
-Accuracy: 0.7633
-F1-score: 0.8274'
+Accuracy: 0.7306
+F1-score: 0.7975
 
+
+
+Q5: After a grid search ran on the following paramters space:
+Bias in [.01, .05, .1, .2, .25, .3, .35, .4, .5, .7, .9]
+max_depth in [2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+We found that the best parameters for unseen test set is with a bias of 0.4 and a max_depth of 10.
+
+Performance Random Forest:
+      |    true    |
+ pred | TRUE FALSE |
+------|------------|
+ TRUE |  402   103 |
+FALSE |   93   137 |
+
+Accuracy: 0.7333
+F1-score: 0.8040
+
+
+
+Q6: For the preprocessing of the text, we decided to implement a preprocessing function that will make it easier to tune the preprocessing stage as we try different methods.
+
+Before any modifications:
+Accuracy: 0.6500
+F1-score: 0.6698
+
+We decided to modify the way the bag of words model works in order to avoid the size of the text having an effect on the results: before, the number of times the token appeared in the text was the value used in the bag of words, and we now use the frequency of the said word in the text. Therefore the size of the text does not matter compared to how often the said word appear. (for example, a review of 500 words containing 4 times the word 'bad' could be less negative than a review of 50 words containing it 3 times).
+Then, we decided to use word-punctuation tokenizing (as punctuation usually gives contextual information which is useless in a bag of words model)

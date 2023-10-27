@@ -6,6 +6,18 @@ Author Korbinian Randl
 from decision_tree import BinaryDecisionTree
 import random
 
+def most_frequent(List):
+    counter = 0
+    num = List[0]
+    
+    for i in List:
+        curr_frequency = List.count(i)
+        if(curr_frequency> counter):
+            counter = curr_frequency
+            num = i
+
+    return num
+
 class BinaryRandomForest:
     def __init__(self, X:dict, y:list, n_trees:int, bias:float=.5, max_depth:int=float('inf')) -> None:
         '''Creates and trains a binary random forest.
@@ -33,8 +45,7 @@ class BinaryRandomForest:
         returns:        predicted boolean class
         '''
         predictions = [tree.predict(X) for tree in self.trees]
-
-        return random.choice(predictions)
+        return most_frequent(predictions)
 
     def get_sample(self, X:dict, y:list) -> dict:
         '''Implements feature bagging for X.

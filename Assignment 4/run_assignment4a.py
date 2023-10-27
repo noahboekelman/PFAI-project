@@ -70,6 +70,13 @@ y_train = y[0:threshold]
 X_test = {key: X[key][threshold:] for key in X.keys()}
 y_test = y[threshold:]
 
+'''with open('wines.json', 'r') as file:
+    X_train = json.load(file)
+y_train = X_train.pop('class')
+
+X_test = X_train
+y_test = y_train'''
+
 ####################################################################################################
 # Main Function:                                                                                   #
 ####################################################################################################
@@ -95,6 +102,13 @@ if __name__ == '__main__':
     # print confusion matrix:
     print('Performance Decision Tree:')
     metrics.pretty_print(y_test, predictions_tree)
+
+    #Grid search
+    '''for bias in [.2, .25, .3, .35, .4]:
+        for max_depth in range(7, 11):
+            tree = BinaryDecisionTree(X_train, y_train, bias=bias, max_depth=max_depth)
+            predictions_tree = tree.predict(X_test)
+            print(f"Bias: {bias}\tmax_depth: {max_depth}\t\tAccuracy: {metrics.get_accuracy(y_test, predictions_tree)}\tF1-Score: {metrics.get_f1(y_test, predictions_tree)}")'''
 
 
     # train a random forrest classifier and predict the test set:
